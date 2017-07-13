@@ -77,11 +77,10 @@ function amplify_actions_all($state, $district) {
 	print '<h2 class="amplify-actions-header">Actions for ' . htmlentities($state) . '-' . htmlentities($district) . '</h2>' . "\n";
 
 	$json = fread($file, 1000000);
+	fclose($file);
 	$actions = json_decode($json, true);
 
 	array_map('_amplify_present_one_action', $actions['concreteActions']);
-
-	fclose($file);
 
 	print "</div>\n";
 }
