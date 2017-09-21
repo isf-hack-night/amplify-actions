@@ -26,6 +26,10 @@ function _amplify_present_one_phone_number($office) {
 	print '<li class="amplify-contact-each amplify-contact-phone"><a href="' . htmlentities($telLink) . '">' . $officeDesc . '</a></li>' . "\n";
 }
 
+function _amplify_fix_placeholders($script) {
+	return preg_replace('/<([A-Z ]+)>/', '&lt;\1&gt;', $script);
+}
+
 function _amplify_present_one_action($action) {
 	$script = $action['callScriptMd'];
 	if (!$script) {
@@ -35,7 +39,7 @@ function _amplify_present_one_action($action) {
 	print '<div class="amplify-action">' . "\n";
 	print '<h3 class="amplify-title"><span class="amplify-title-preTitle">' . htmlentities($action['preTitle']) . '</span> ' . htmlentities($action['title']) . '</h3>' . "\n";
 
-	print '<div class="amplify-callScript">' . str_replace('<h1>', '<h4>', str_replace('</h1>', '</h4>', \Michelf\Markdown::defaultTransform($script))) . '</div>' . "\n";
+	print '<div class="amplify-callScript">' . str_replace('<h1>', '<h4>', str_replace('</h1>', '</h4>', \Michelf\Markdown::defaultTransform(_amplify_fix_placeholders($script)))) . '</div>' . "\n";
 
 	$person = isset($action['person']) ? $action['person'] : null;
 	if ($person) {
