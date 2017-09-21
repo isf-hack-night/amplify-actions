@@ -89,20 +89,11 @@ function amplify_actions_all($state, $district) {
 	print "</div>\n";
 }
 
-function amplify_actions_one_moc($state, $district, $personID) {
-	$district = 0 + $district;
-	if ($district < 0 || $district > 99) {
-		# That's not a district. (California has 53, the most in the Union, but let's be flexible here.)
-		return;
-	}
-	if (1 != preg_match('/^[A-Z][A-Z]$/', $state)) {
-		# That's not a state.
-		return;
-	}
+function _amplify_actions_extract($filename, $personID) {
 	# Currently, person IDs are integers, so enforce that here.
 	$personID = 0 + $personID;
 
-	$file = fopen("wp-content/amplify-actions-$state$district.json", 'r');
+	$file = fopen('wp-content/' . $filename, 'r');
 	if (! $file) {
 		print "No actions today!\n";
 		return;
@@ -133,6 +124,54 @@ function amplify_actions_one_moc($state, $district, $personID) {
 	if (! $needsBeginDiv) {
 		print "</div>\n";
 	}
+}
+
+function amplify_actions_one_moc($state, $district, $personID) {
+	$district = 0 + $district;
+	if ($district < 0 || $district > 99) {
+		# That's not a district. (California has 53, the most in the Union, but let's be flexible here.)
+		return;
+	}
+	if (1 != preg_match('/^[A-Z][A-Z]$/', $state)) {
+		# That's not a state.
+		return;
+	}
+	# Currently, person IDs are integers, so enforce that here.
+	$personID = 0 + $personID;
+
+	return _amplify_actions_extract("amplify-actions-US-$state$district.json", $personID);
+}
+
+function amplify_actions_one_state_upper($state, $district, $personID) {
+	$district = 0 + $district;
+	if ($district < 0 || $district > 99) {
+		# That's not a district. (California has 53, the most in the Union, but let's be flexible here.)
+		return;
+	}
+	if (1 != preg_match('/^[A-Z][A-Z]$/', $state)) {
+		# That's not a state.
+		return;
+	}
+	# Currently, person IDs are integers, so enforce that here.
+	$personID = 0 + $personID;
+
+	return _amplify_actions_extract("amplify-actions-$state-upper-$district.json", $personID);
+}
+
+function amplify_actions_one_state_lower($state, $district, $personID) {
+	$district = 0 + $district;
+	if ($district < 0 || $district > 99) {
+		# That's not a district. (California has 53, the most in the Union, but let's be flexible here.)
+		return;
+	}
+	if (1 != preg_match('/^[A-Z][A-Z]$/', $state)) {
+		# That's not a state.
+		return;
+	}
+	# Currently, person IDs are integers, so enforce that here.
+	$personID = 0 + $personID;
+
+	return _amplify_actions_extract("amplify-actions-$state-lower-$district.json", $personID);
 }
 
 /*
