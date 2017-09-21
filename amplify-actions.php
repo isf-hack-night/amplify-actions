@@ -85,6 +85,52 @@ function amplify_actions_all($state, $district) {
 	print "</div>\n";
 }
 
+function amplify_actions_one_moc($state, $district, $personID) {
+	$district = 0 + $district;
+	if ($district < 0 || $district > 99) {
+		# That's not a district. (California has 53, the most in the Union, but let's be flexible here.)
+		return;
+	}
+	if (1 != preg_match('/^[A-Z][A-Z]$/', $state)) {
+		# That's not a state.
+		return;
+	}
+	# Currently, person IDs are integers, so enforce that here.
+	$personID = 0 + $personID;
+
+	$file = fopen("wp-content/amplify-actions-$state$district.json", 'r');
+	if (! $file) {
+		print "No actions today!\n";
+		return;
+	}
+
+	$json = fread($file, 1000000);
+	fclose($file);
+
+	$allDistrictActions = json_decode($json, true);
+	$needsBeginDiv = true;
+
+	foreach ($allDistrictActions['concreteActions'] as $action) {
+		if ($action['callPersonId'] === $personID || ( (! is_null($action['callPersonIds'])) && in_array($personID, $action['callPersonIds']) )) {
+			if ($needsBeginDiv) {
+				$prefix = $action['person']['prefix'];
+				$fullName = $action['person']['firstName'] . ' ' . $action['person']['lastName'];
+				$identifier = $action['person']['firstName'] . $action['person']['lastName'];
+
+				print '<div class="amplify-actions amplify-moc-' . htmlentities('' . $identifier) . '">' . "\n";
+				print '<h2 class="amplify-actions-header">Actions for ' . htmlentities($prefix) . ' ' . htmlentities($fullName) . '</h2>' . "\n";
+				$needsBeginDiv = false;
+			}
+
+			_amplify_present_one_action($action);
+		}
+	}
+
+	if (! $needsBeginDiv) {
+		print "</div>\n";
+	}
+}
+
 /*
 ?><html>
 <head><meta charset="utf-8"><title>CA-12</title>
