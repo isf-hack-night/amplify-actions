@@ -76,7 +76,7 @@ function amplify_actions_all($state, $district) {
 	print '<div class="amplify-actions amplify-' . htmlentities($state) . '-' . htmlentities($district) . '">' . "\n";
 	print '<h2 class="amplify-actions-header">Actions for ' . htmlentities($state) . '-' . htmlentities($district) . '</h2>' . "\n";
 
-	$json = fread($file, 1000000);
+	$json = fread($file, 100000);
 	fclose($file);
 	$actions = json_decode($json, true);
 
@@ -104,7 +104,7 @@ function amplify_actions_one_moc($state, $district, $personID) {
 		return;
 	}
 
-	$json = fread($file, 1000000);
+	$json = fread($file, 100000);
 	fclose($file);
 
 	$allDistrictActions = json_decode($json, true);
